@@ -19,7 +19,6 @@
       - software-properties-common
       - gnupg2
       - curl
-      - ufw
       - xz-utils
     state: present
     update_cache: true
@@ -27,20 +26,8 @@
 # Fastfetch is not available in apt
 - name: Install Fastfetch
   ansible.builtin.apt:
-    deb: https://github.com/fastfetch-cli/fastfetch/releases/download/2.17.2/fastfetch-linux-amd64.deb
+    deb: https://github.com/fastfetch-cli/fastfetch/releases/download/{{ fastfetch_version }}/fastfetch-linux-amd64.deb
     state: present
-
-- name: Enable UFW logging
-  community.general.ufw:
-    logging: 'on'
-
-- name: Configure SSHD
-  ansible.builtin.include_tasks: 
-    file: ssh_config.yml
-
-- name: Enable UFW
-  community.general.ufw:
-    state: enabled
 
 - name: Remove undesirable packages
   ansible.builtin.apt:

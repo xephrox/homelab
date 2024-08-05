@@ -5,6 +5,8 @@ api_port: 6443  # noqa var-naming[no-role-prefix]
 kubeconfig: ~/.kube/config.new  # noqa var-naming[no-role-prefix]
 user_kubectl: true  # noqa var-naming[no-role-prefix]
 cluster_context: k3s-ansible  # noqa var-naming[no-role-prefix]
-server_group: k3smaster  # noqa var-naming[no-role-prefix]
+server_group: server  # noqa var-naming[no-role-prefix]
 agent_group: agent  # noqa var-naming[no-role-prefix]
 use_external_database: false # noqa var-naming[no-role-prefix]
+extra_server_args: "--disable=traefik --disable=servicelb"
+argo_cd_version: "v2.12.0"

@@ -1,9 +1,4 @@
 ---
-
-- name: Include prereq role
-  ansible.builtin.include_tasks:
-    file: prereq.yml
-
 - name: Get k3s installed version
   ansible.builtin.command: k3s --version
   register: k3s_version_output

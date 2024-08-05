@@ -1,14 +1,15 @@
 ---
-k3s_version: v1.30.2+k3s2
+k3s_version: v1.30.3+k3s1
 k3s_server_location: "/var/lib/rancher/k3s"
 systemd_dir: "/etc/systemd/system"  # noqa var-naming[no-role-prefix]
 api_port: 6443  # noqa var-naming[no-role-prefix]
-kubeconfig: ~/.kube/config.new  # noqa var-naming[no-role-prefix]
+kubeconfig: ~/.kube/config  # noqa var-naming[no-role-prefix]
 user_kubectl: true  # noqa var-naming[no-role-prefix]
 cluster_context: k3s-ansible  # noqa var-naming[no-role-prefix]
-server_group: k3smaster  # noqa var-naming[no-role-prefix]
-agent_group: agent  # noqa var-naming[no-role-prefix]
+server_group: k3s_master  # noqa var-naming[no-role-prefix]
+agent_group: k3s_worker  # noqa var-naming[no-role-prefix]
 use_external_database: false # noqa var-naming[no-role-prefix]
-api_endpoint: "{{ hostvars[groups['k3smaster'][0]]['ansible_host'] | default(groups['k3smaster'][0]) }}"
-extra_server_args: ""
+api_endpoint: "{{ hostvars[groups['k3s_master'][0]]['ansible_host'] | default(groups['k3s_master'][0]) }}"
+extra_server_args: "--disable=traefik --disable=servicelb"
 extra_agent_args: ""
+argo_cd_version: "v2.12.0"

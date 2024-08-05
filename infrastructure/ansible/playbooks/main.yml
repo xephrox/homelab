@@ -5,9 +5,34 @@
   remote_user: xephrox
   become: yes
 
-- name: Ansible playbook for k3s master
-  hosts: k3smaster
+- name: K3s cluster prep
+  hosts: k3s_cluster
+  gather_facts: true
+  roles:
+    - prereq
+  remote_user: xephrox
+  become: yes
+
+- name: Setup K3s Master
+  hosts: k3s_master
+  gather_facts: true
   roles:
     - k3s_master
+  remote_user: xephrox
+  become: yes
+
+- name: Setup K3s Workers
+  hosts: k3s_worker
+  gather_facts: true
+  roles:
+    - k3s_worker
+  remote_user: xephrox
+  become: yes
+
+- name: Setup ArgoCD
+  hosts: k3s_master
+  gather_facts: true
+  roles:
+    - argocd
   remote_user: xephrox
   become: yes

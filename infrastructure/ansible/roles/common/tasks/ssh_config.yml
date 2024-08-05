@@ -13,9 +13,22 @@
   debug:
     var: admin_networks
 
-- name: Allow SSH from admin networks
-  community.general.ufw:
-    rule: allow
-    port: ssh
-    src: "{{ item }}"
-  loop: "{{ admin_networks }}"
+- name: Allow UFW Exceptions
+  when:
+    - ansible_facts.services['ufw'] is defined
+    - ansible_facts.services['ufw'].state == 'running'
+  block:
+    - name: Get ufw status
+      ansible.builtin.command:
+        cmd: ufw status
+      changed_when: false
+      register: ufw_status
+
+    - name: Allow SSH from admin networks, if ufw enabled
+      when:
+        - ufw_status['stdout'] == "Status':' active"
+      community.general.ufw:
+        rule: allow
+        port: ssh
+        src: "{{ item }}"
+      loop: "{{ admin_networks }}"

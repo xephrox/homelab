@@ -1,4 +1,7 @@
 ---
+#
+# Currently not used, but can be used to install cockpit on the server
+#
 
 - name: 'Update APT package cache'
   apt:
@@ -11,10 +14,22 @@
       - cockpit
     state: present
 
-- name: 'Allow access to port 9090 from admin networks'
-  ufw:
-    rule: allow
-    port: 9090
-    src: '{{ item }}'
-  with_items:
-    - "{{ admin_networks }}"
+- name: Allow UFW Exceptions
+  when:
+    - ansible_facts.services['ufw'] is defined
+    - ansible_facts.services['ufw'].state == 'running'
+  block:
+    - name: Get ufw status
+      ansible.builtin.command:
+        cmd: ufw status
+      changed_when: false
+      register: ufw_status
+
+    - name: Allow Cockpit from admin networks, if ufw enabled
+      when:
+        - ufw_status['stdout'] == "Status':' active"
+      community.general.ufw:
+        rule: allow
+        port: 9090
+        src: "{{ item }}"
+      loop: "{{ admin_networks }}"

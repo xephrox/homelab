@@ -1,0 +1,24 @@
+---
+
+- name: Install ArgoCD in cluster
+  block:
+    - name: Create ArgoCD namespace
+      ansible.builtin.shell: |
+        kubectl create namespace argocd
+    - name: Install ArgoCD
+      ansible.builtin.shell: |
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/install.yaml 
+    - name: Patch ArgoCD server
+      ansible.builtin.shell: |
+        kubectl patch deploy argocd-server -n argocd --type json -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/command", "value": ["argocd-server", "--insecure", "--staticassets","/shared/app"]}]'
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Wait for ArgoCD to be ready
+  ansible.builtin.pause:
+    minutes: 2
+
+- name: Add ArgoCD Application to cluster
+  ansible.builtin.shell: |
+    kubectl apply -n argocd -f {{ cluster_application_url }}
+
