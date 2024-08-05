@@ -1,0 +1,21 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+  annotations:
+    cert-manager.io/common-name: traefik.dev.xephrox.xyz
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-size: '384'
+    cert-manager.io/subject-countries: SE
+    cert-manager.io/subject-organizationalunits: Kubernetes - Services
+    cert-manager.io/subject-organizations: XEPHROX.XYZ
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefik.dev.xephrox.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
