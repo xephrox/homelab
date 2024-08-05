@@ -1,0 +1,20 @@
+---
+
+- name: 'Update APT package cache'
+  apt:
+    update_cache: yes
+    upgrade: safe
+
+- name: 'Install Cockpit'
+  apt:
+    package:
+      - cockpit
+    state: present
+
+- name: 'Allow access to port 9090 from admin networks'
+  ufw:
+    rule: allow
+    port: 9090
+    src: '{{ item }}'
+  with_items:
+    - "{{ admin_networks }}"

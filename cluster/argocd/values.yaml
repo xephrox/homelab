@@ -1,0 +1,31 @@
+crds:
+  install: true
+
+global:
+  env:
+    - name: TZ
+      value: Europe/Stockholm
+
+configs:
+  cm:
+    kustomize.buildOptions: '--enable-helm --enable-alpha-plugins --enable-exec'
+
+## Server
+server:
+  ingress:
+    enabled: true
+    # annotations:
+      # cert-manager.io/common-name: &host argocd.dev.xephrox.xyz
+      # cert-manager.io/subject-countries: US
+      # cert-manager.io/subject-organizations: "xephrox.xyz"
+      # cert-manager.io/subject-organizationalunits: "Kubernetes Cluster"
+      # cert-manager.io/private-key-algorithm: ECDSA
+      # cert-manager.io/private-key-size: "384"
+      # gethomepage.dev/enabled: "true"
+      # gethomepage.dev/group: "Infrastructure"
+      # gethomepage.dev/icon: argocd.png
+      # gethomepage.dev/description: "GitOps Cluster Dashboard"
+      # gethomepage.dev/name: ArgoCD
+    ingressClassName: traefik
+    hostname: argocd.dev.xephrox.xyz
+    tls: true

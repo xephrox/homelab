@@ -1,0 +1,13 @@
+- name: Ansible playbook for all our hosts
+  hosts: all
+  roles:
+    - common
+  remote_user: xephrox
+  become: yes
+
+- name: Ansible playbook for k3s master
+  hosts: k3smaster
+  roles:
+    - k3s_master
+  remote_user: xephrox
+  become: yes

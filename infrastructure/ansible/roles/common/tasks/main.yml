@@ -1,0 +1,64 @@
+---
+# - name: Enforce minimum Ansible version
+  # ansible.builtin.assert:
+    # that: ansible_version.full_version >= '2.7'
+    # fail_msg: "This playbook requires Ansible 2.7 or later"
+
+- name: 'Update APT package cache'
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: safe
+  
+- name: Install packages
+  ansible.builtin.apt:
+    pkg:
+      - git
+      - apt-transport-https
+      - ca-certificates
+      - wget
+      - software-properties-common
+      - gnupg2
+      - curl
+      - ufw
+      - xz-utils
+    state: present
+    update_cache: true
+
+# Fastfetch is not available in apt
+- name: Install Fastfetch
+  ansible.builtin.apt:
+    deb: https://github.com/fastfetch-cli/fastfetch/releases/download/2.17.2/fastfetch-linux-amd64.deb
+    state: present
+
+- name: Enable UFW logging
+  community.general.ufw:
+    logging: 'on'
+
+- name: Configure SSHD
+  ansible.builtin.include_tasks: 
+    file: ssh_config.yml
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+
+- name: Remove undesirable packages
+  ansible.builtin.apt:
+    pkg: "{{ unnecessary_software }}"
+    state: absent
+
+- name: Stop and disable unnecessary services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items: "{{ unnecessary_services }}"
+  ignore_errors: yes
+
+- name: Set Fastfetch as motd
+  ansible.builtin.template:
+    dest: /etc/update-motd.d/90-fastfetch-motd
+    src: 90-fastfetch-motd.j2
+    owner: root
+    group: root
+    mode: 0755

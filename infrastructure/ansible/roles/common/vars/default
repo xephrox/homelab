@@ -1,0 +1,7 @@
+unnecessary_services:
+  - postfix
+  - telnet
+unnecessary_software:
+  - tcpdump
+  - nmap-ncat
+  - wpa_supplicant

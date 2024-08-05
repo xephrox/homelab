@@ -1,0 +1,11 @@
+admin_networks:
+  - 10.123.30.0/24
+  - 10.123.1.0/24
+ansible_username: xephrox
+unnecessary_services:
+  - postfix
+  - telnet
+unnecessary_software:
+  - tcpdump
+  - nmap-ncat
+  - wpa_supplicant
