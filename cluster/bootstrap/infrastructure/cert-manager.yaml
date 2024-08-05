@@ -15,7 +15,7 @@ spec:
     targetRevision: v1.15.2
     helm:
       valueFiles:
-      - ./values.yaml
+      - cluster/apps/infrastructure/cert-manager/values.yaml
       releaseName: cert-manager
   - repoURL: https://github.com/xephrox/homelab
     path: cluster/apps/infrastructure/cert-manager
