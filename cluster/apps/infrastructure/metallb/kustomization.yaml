@@ -11,5 +11,5 @@ helmCharts:
   valuesFile: values.yaml
 
 resources:
-- base/traefik-rbac.yaml
-- base/traefik-ingress-route.yaml
+- base/pool.yaml
+- base/l2advertisement.yaml
