@@ -9,7 +9,7 @@ extraArgs:
 prometheus:
   enabled: true
   servicemonitor:
-    enabled: true
+    enabled: false
     prometheusInstance: kube-prometheus-stack
     labels:
       release: kube-prometheus-stack
