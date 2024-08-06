@@ -21,7 +21,7 @@
 
 - name: Install ArgoCD
   ansible.builtin.shell: |
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/install.yaml 
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/ha/install.yaml 
   delegate_to: 127.0.0.1
   become: false
 

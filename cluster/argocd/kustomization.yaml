@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+
+resources:
+- base/ingress-route.yaml
+- https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/ha/install.yaml
+
+components:
+- https://github.com/argoproj-labs/argocd-extensions/manifests
+
+patches:
+- path: patches/argocd-cm.yaml
+- path: patches/argocd-cmd-params-cm.yaml
+
+images:
+- name: quay.io/argoproj/argocd
+  newName: ghcr.io/argoproj/argo-cd/argocd
+  newTag: 2.13.0-d61f18df
