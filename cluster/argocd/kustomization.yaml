@@ -7,6 +7,6 @@ resources:
 - base/ingress-route.yaml
 - https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/ha/install.yaml
 
-patches:
+patchesStrategicMerge:
 - path: patches/argocd-cm.yaml
 - path: patches/argocd-cmd-params-cm.yaml
