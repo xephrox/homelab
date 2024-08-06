@@ -5,8 +5,6 @@ namespace: argocd
 
 resources:
 - base/ingress-route.yaml
+- base/argocd-cm.yaml
+- base/argocd-cmd-params-cm.yaml
 - https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/ha/install.yaml
-
-patchesStrategicMerge:
-- patches/argocd-cm.yaml
-- patches/argocd-cmd-params-cm.yaml
