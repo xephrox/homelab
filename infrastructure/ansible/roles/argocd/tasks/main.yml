@@ -1,5 +1,13 @@
 ---
 
+- name: install pip
+  ansible.builtin.apt:
+    pkg: 
+      - python3-pip
+      - python3-kubernetes
+    state: present
+    update_cache: true
+
 - name: Check if ArgoCD namespace exists
   ansible.builtin.shell: kubectl get namespace argocd
   register: namespace_check
@@ -23,20 +31,9 @@
   delegate_to: 127.0.0.1
   become: false
 
-- name: Wait for ArgoCD deployment to be ready
-  kubernetes.core.k8s_info:
-    kind: Deployment
-    name: argocd-server
-    namespace: argocd
-  register: argocd_deployment
-  until:
-    - argocd_deployment.resources is defined
-    - argocd_deployment.resources | length > 0
-    - argocd_deployment.resources[0].status is defined
-    - argocd_deployment.resources[0].status.availableReplicas is defined
-    - argocd_deployment.resources[0].status.availableReplicas == argocd_deployment.resources[0].status.replicas
-  retries: 30
-  delay: 10
+- name: Wait for ArgoCD deployment to be up
+  ansible.builtin.pause:
+    minutes: 2
 
 - name: Add ArgoCD Application to cluster
   ansible.builtin.shell: |
