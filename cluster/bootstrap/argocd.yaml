@@ -13,6 +13,9 @@ spec:
     repoURL: https://github.com/xephrox/homelab
     path: cluster/argocd
     targetRevision: main
+    kustomize:
+      buildOptions:
+        - --enable-helm
   destination:
     name: in-cluster
     namespace: argocd
