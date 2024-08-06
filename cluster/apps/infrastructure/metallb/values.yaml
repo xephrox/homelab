@@ -93,54 +93,54 @@ prometheus:
     #   action: replace
 
   # Prometheus Operator alertmanager alerts
-  prometheusRule:
-    # enable alertmanager alerts
-    enabled: true
+  #prometheusRule:
+  #  # enable alertmanager alerts
+  #  enabled: true
 
-    # optional additionnal labels for prometheusRules
-    additionalLabels: {}
+  #  # optional additionnal labels for prometheusRules
+  #  additionalLabels: {}
 
-    # optional annotations for prometheusRules
-    annotations: {}
+  #  # optional annotations for prometheusRules
+  #  annotations: {}
 
-    # MetalLBStaleConfig
-    staleConfig:
-      enabled: true
-      labels:
-        severity: warning
+  #  # MetalLBStaleConfig
+  #  staleConfig:
+  #    enabled: true
+  #    labels:
+  #      severity: warning
 
-    # MetalLBConfigNotLoaded
-    configNotLoaded:
-      enabled: true
-      labels:
-        severity: warning
+  #  # MetalLBConfigNotLoaded
+  #  configNotLoaded:
+  #    enabled: true
+  #    labels:
+  #      severity: warning
 
-    # MetalLBAddressPoolExhausted
-    addressPoolExhausted:
-      enabled: true
-      labels:
-        severity: alert
+  #  # MetalLBAddressPoolExhausted
+  #  addressPoolExhausted:
+  #    enabled: true
+  #    labels:
+  #      severity: alert
 
-    addressPoolUsage:
-      enabled: true
-      thresholds:
-        - percent: 75
-          labels:
-            severity: warning
-        - percent: 85
-          labels:
-            severity: warning
-        - percent: 95
-          labels:
-            severity: alert
+  #  addressPoolUsage:
+  #    enabled: true
+  #    thresholds:
+  #      - percent: 75
+  #        labels:
+  #          severity: warning
+  #      - percent: 85
+  #        labels:
+  #          severity: warning
+  #      - percent: 95
+  #        labels:
+  #          severity: alert
 
-    # MetalLBBGPSessionDown
-    bgpSessionDown:
-      enabled: true
-      labels:
-        severity: alert
+  #  # MetalLBBGPSessionDown
+  #  bgpSessionDown:
+  #    enabled: true
+  #    labels:
+  #      severity: alert
 
-    extraAlerts: []
+  #  extraAlerts: []
 
 # controller contains configuration specific to the MetalLB cluster
 # controller.
