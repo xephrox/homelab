@@ -4,7 +4,6 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-- base/ingress-route.yaml
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.12.0/manifests/ha/install.yaml
 
 patches:
