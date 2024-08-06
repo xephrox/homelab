@@ -10,15 +10,8 @@ metadata:
 spec:
   project: default
   sources:
-    - chart: traefik
-      repoURL: https://traefik.github.io/charts
-      targetRevision: v30.0.2
-      helm:
-        valueFiles:
-        - $repo/cluster/apps/infrastructure/traefik/values.yaml
-        releaseName: traefik
-    - repoURL: https://github.com/xephrox/homelab
-      path: cluster/apps/infrastructure/traefik
+  - repoURL: https://github.com/xephrox/homelab
+    path: cluster/apps/infrastructure/traefik
       targetRevision: main
       ref: repo
   destination:

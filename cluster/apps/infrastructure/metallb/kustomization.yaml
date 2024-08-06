@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: metallb-system
+
+helmCharts:
+- name: metallb
+  repo: https://metallb.github.io/metallb
+  releaseName: metallb
+  version: v0.14.8
+  valuesFile: values.yaml
+
+resources:
+- base/traefik-rbac.yaml
+- base/traefik-ingress-route.yaml

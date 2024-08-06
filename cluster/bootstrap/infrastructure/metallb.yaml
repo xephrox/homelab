@@ -10,13 +10,6 @@ metadata:
 spec:
   project: default
   sources:
-  - chart: metallb
-    repoURL: https://metallb.github.io/metallb
-    targetRevision: v0.14.8
-    helm:
-      valueFiles:
-      - $repo/cluster/apps/infrastructure/metallb/values.yaml
-      releaseName: metallb
   - repoURL: https://github.com/xephrox/homelab
     path: cluster/apps/infrastructure/metallb
     targetRevision: main
