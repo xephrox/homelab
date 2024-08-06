@@ -17,7 +17,7 @@ spec:
       valueFiles:
       - $repo/cluster/apps/infrastructure/metallb/values.yaml
       releaseName: metallb
-  - repoURL: https://github.com/clearlybaffled/homelab
+  - repoURL: https://github.com/xephrox/homelab
     path: cluster/apps/infrastructure/metallb
     targetRevision: main
     ref: repo
