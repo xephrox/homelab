@@ -1,0 +1,31 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    cert-manager.io/common-name: argocd.dev.xephrox.xyz
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-size: '384'
+    cert-manager.io/subject-countries: SE
+    cert-manager.io/subject-organizationalunits: Kubernetes - Services
+    cert-manager.io/subject-organizations: XEPHROX.XYZ
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.dev.xephrox.xyz`)
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(`argocd.dev.xephrox.xyz`) && Headers(`Content-Type`, `application/grpc`)
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+  tls:
+    certResolver: default
