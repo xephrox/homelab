@@ -1,3 +1,0 @@
----
-argo_cd_version: "v2.12.0"
-cluster_application_url: "https://raw.githubusercontent.com/xephrox/homelab/main/cluster/cluster.yaml"
