@@ -1,0 +1,223 @@
+---
+- name: Check Cluster connection
+  block:
+    - name: Check Cluster connection
+      kubernetes.core.k8s_cluster_info:
+      register: api_status
+    
+    - name: Fail if cluster connection is not successful
+      ansible.builtin.fail:
+        msg: "Failed to establish connection to cluster"
+      when: not api_status.connection | default(false)
+
+#  .d8888b.           888 d8b                  
+# d88P  Y88b          888 Y8P                  
+# 888    888          888                      
+# 888         8888b.  888 888  .d8888b .d88b.  
+# 888            "88b 888 888 d88P"   d88""88b 
+# 888    888 .d888888 888 888 888     888  888 
+# Y88b  d88P 888  888 888 888 Y88b.   Y88..88P 
+#  "Y8888P"  "Y888888 888 888  "Y8888P "Y88P"  
+                                             
+- name: Bootstrap cluster with Calico
+  block:
+    - name: Deploy Calico Operator
+      kubernetes.core.k8s:
+        state: present
+        src: "https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/tigera-operator.yaml"
+      register: calico_operator_result
+      until: calico_operator_result is not failed
+      retries: 3
+      delay: 10
+
+    - name: Deploy Calico custom resource
+      kubernetes.core.k8s:
+        state: present
+        apply: yes
+        namespace: calico-system
+        src: "https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/custom-resources.yaml"
+      register: calico_cr_result
+      until: calico_cr_result is not failed
+      retries: 3
+      delay: 10
+
+#        d8888                           .d8888b.  8888888b.  
+#       d88888                          d88P  Y88b 888  "Y88b 
+#      d88P888                          888    888 888    888 
+#     d88P 888 888d888 .d88b.   .d88b.  888        888    888 
+#    d88P  888 888P"  d88P"88b d88""88b 888        888    888 
+#   d88P   888 888    888  888 888  888 888    888 888    888 
+#  d8888888888 888    Y88b 888 Y88..88P Y88b  d88P 888  .d88P 
+# d88P     888 888     "Y88888  "Y88P"   "Y8888P"  8888888P"  
+#                          888                                
+#                     Y8b d88P                                
+#                      "Y88P"                                     
+
+- name: Bootstrap cluster with argocd
+  block:
+    - name: Create argocd namespace
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: argocd
+    
+    - name: Install ArgoCD
+      kubernetes.core.k8s:
+        state: present
+        apply: yes
+        src: "https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/ha/install.yaml"
+        namespace: argocd
+      register: argocd_install_result
+      until: argocd_install_result is not failed
+      retries: 3
+      delay: 10
+
+    - name: Patch ArgoCD server
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: argocd-server
+            namespace: argocd
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: argocd-server
+                    command: ["argocd-server", "--insecure", "--staticassets", "/shared/app"]
+                    env:
+                      - name: ARGOCD_SYNC_WAVE_DELAY
+                        value: "30"
+                      - name: TZ
+                        value: Europe/Stockholm
+
+    - name: Create ArgoCD ConfigMap
+      kubernetes.core.k8s_json_patch:
+        api_version: v1
+        kind: ConfigMap
+        name: argocd-cm
+        namespace: argocd
+        patch:
+          - op: add
+            path: "/data"
+            value: {}
+          - op: add
+            path: "/data/kustomize.buildOptions"
+            value: "--enable-helm --enable-alpha-plugins --enable-exec"
+      register: create_result
+      failed_when: false
+
+    - name: Update ArgoCD ConfigMap if add operation failed
+      kubernetes.core.k8s_json_patch:
+        api_version: v1
+        kind: ConfigMap
+        name: argocd-cm
+        namespace: argocd
+        patch:
+          - op: replace
+            path: "/data/kustomize.buildOptions"
+            value: "--enable-helm --enable-alpha-plugins --enable-exec"
+      when: create_result.failed
+
+    - name: Patch ArgoCD CMD ConfigMap
+      kubernetes.core.k8s_json_patch:
+        api_version: v1
+        kind: ConfigMap
+        name: argocd-cmd-params-cm
+        namespace: argocd
+        patch:
+          - op: add
+            path: "/data/server.insecure"
+            value: "true"
+    
+    - name: Patch ArgoCD Repo Server Deployment
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: argocd-repo-server
+        namespace: argocd
+        definition:
+          spec:
+            template:
+              spec:
+                volumes:
+                  - name: custom-tools
+                    emptyDir: {}
+                initContainers:
+                  - name: install-ksops
+                    image: viaductoss/ksops:v4.3.2
+                    command: ["/bin/sh", "-c"]
+                    args:
+                      - echo "Installing KSOPS...";
+                        mv ksops /custom-tools/;
+                        mv kustomize /custom-tools/;
+                        echo "Done.";
+                    volumeMounts:
+                      - mountPath: /custom-tools
+                        name: custom-tools
+                containers:
+                  - name: argocd-repo-server
+                    volumeMounts:
+                      - mountPath: /usr/local/bin/kustomize
+                        name: custom-tools
+                        subPath: kustomize
+                      - mountPath: /usr/local/bin/ksops
+                        name: custom-tools
+                        subPath: ksops
+
+#  .d8888b.                                         d8888                   
+# d88P  Y88b                                       d88888                   
+# Y88b.                                           d88P888                   
+#  "Y888b.    .d88b.  88888b.  .d8888b           d88P 888  .d88b.   .d88b.  
+#     "Y88b. d88""88b 888 "88b 88K              d88P  888 d88P"88b d8P  Y8b 
+#       "888 888  888 888  888 "Y8888b. 888888 d88P   888 888  888 88888888 
+# Y88b  d88P Y88..88P 888 d88P      X88       d8888888888 Y88b 888 Y8b.     
+#  "Y8888P"   "Y88P"  88888P"   88888P'      d88P     888  "Y88888  "Y8888  
+#                     888                                      888          
+#                     888                                 Y8b d88P          
+#                     888                                  "Y88P"           
+
+- name: Bootstrap cluster with sops-age secret
+  block:
+    - name: Check if age key file exists
+      ansible.builtin.stat:
+        path: "{{ age_key_file }}"
+      register: age_key_file_stat
+
+    - name: Read age key file
+      when: age_key_file_stat.stat.exists
+      ansible.builtin.slurp:
+        src: "{{ age_key_file }}"
+      register: age_key_file
+    
+    - name: Create kubernetes secret with age key
+      when: age_key_file_stat.stat.exists
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: sops-age
+            namespace: argocd
+          type: Opaque
+          data:
+            secret.key: "{{ age_key_file.content | b64encode }}"
+
+#  .d8888b.  888                   888                    
+# d88P  Y88b 888                   888                    
+# 888    888 888                   888                    
+# 888        888 888  888 .d8888b  888888 .d88b.  888d888 
+# 888        888 888  888 88K      888   d8P  Y8b 888P"   
+# 888    888 888 888  888 "Y8888b. 888   88888888 888     
+# Y88b  d88P 888 Y88b 888      X88 Y88b. Y8b.     888     
+#  "Y8888P"  888  "Y88888  88888P'  "Y888 "Y8888  888     
+
+# - name: Add ArgoCD Application (app of apps) to cluster
+  # ansible.builtin.shell: |
+    # kubectl apply -n argocd -f {{ cluster_application_url }}

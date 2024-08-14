@@ -9,3 +9,7 @@ unnecessary_software:
   - tcpdump
   - nmap-ncat
   - wpa_supplicant
+argo_cd_version: "v2.12.0"
+calico_version: "v3.28.1"
+age_key_file: "/root/.age/age-key.txt"
+cluster_application_url: "https://raw.githubusercontent.com/xephrox/homelab/main/cluster/cluster.yaml"

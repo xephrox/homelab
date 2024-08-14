@@ -29,10 +29,9 @@
   remote_user: xephrox
   become: yes
 
-- name: Setup ArgoCD
-  hosts: k3s_master
+- name: Bootstrap Cluster
+  hosts: localhost
   gather_facts: true
   roles:
-    - argocd
+    - bootstrap_cluster
   remote_user: xephrox
-  become: yes

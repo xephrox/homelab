@@ -10,6 +10,5 @@ server_group: k3s_master  # noqa var-naming[no-role-prefix]
 agent_group: k3s_worker  # noqa var-naming[no-role-prefix]
 use_external_database: false # noqa var-naming[no-role-prefix]
 api_endpoint: "{{ hostvars[groups['k3s_master'][0]]['ansible_host'] | default(groups['k3s_master'][0]) }}"
-extra_server_args: "--disable=traefik --disable=servicelb"
+extra_server_args: "--flannel-backend=none --cluster-cidr=192.168.0.0/16 --disable-network-policy --disable=traefik --disable=servicelb"
 extra_agent_args: ""
-argo_cd_version: "v2.12.0"

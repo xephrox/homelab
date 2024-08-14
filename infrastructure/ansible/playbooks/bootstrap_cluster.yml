@@ -1,0 +1,6 @@
+- name: Bootstrap Cluster
+  hosts: localhost
+  gather_facts: true
+  roles:
+    - bootstrap_cluster
+  remote_user: xephrox

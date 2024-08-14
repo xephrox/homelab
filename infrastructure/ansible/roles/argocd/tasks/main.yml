@@ -1,15 +1,15 @@
 ---
-
-- name: install pip
-  ansible.builtin.apt:
-    pkg: 
-      - python3-pip
-      - python3-kubernetes
-    state: present
-    update_cache: true
+# - name: install pip
+#   ansible.builtin.apt:
+#     pkg: 
+#       - python3-pip
+#       - python3-kubernetes
+#     state: present
+#     update_cache: true
 
 - name: Check if ArgoCD namespace exists
-  ansible.builtin.shell: kubectl get namespace argocd
+  ansible.builtin.shell: |
+    kubectl get namespace argocd
   register: namespace_check
   ignore_errors: true
   changed_when: false
@@ -35,6 +35,6 @@
   ansible.builtin.pause:
     minutes: 2
 
-- name: Add ArgoCD Application to cluster
+- name: Add ArgoCD Application (app of apps) to cluster
   ansible.builtin.shell: |
     kubectl apply -n argocd -f {{ cluster_application_url }}
