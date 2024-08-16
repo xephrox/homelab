@@ -4,7 +4,7 @@ metadata:
   name: traefik-dashboard
   namespace: traefik
   annotations:
-    cert-manager.io/common-name: traefik.dev.xephrox.xyz
+    cert-manager.io/common-name: traefik.in.xephrox.xyz
     cert-manager.io/private-key-algorithm: ECDSA
     cert-manager.io/private-key-size: '384'
     cert-manager.io/subject-countries: SE
@@ -14,7 +14,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`traefik.dev.xephrox.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+    - match: Host(`traefik.in.xephrox.xyz`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       kind: Rule
       services:
         - name: api@internal

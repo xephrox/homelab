@@ -3,7 +3,7 @@ kind: IngressRoute
 metadata:
   name: argocd-server
   annotations:
-    cert-manager.io/common-name: argocd.dev.xephrox.xyz
+    cert-manager.io/common-name: argocd.in.xephrox.xyz
     cert-manager.io/private-key-algorithm: ECDSA
     cert-manager.io/private-key-size: '384'
     cert-manager.io/subject-countries: SE
@@ -14,14 +14,14 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`argocd.dev.xephrox.xyz`)
+      match: Host(`argocd.in.xephrox.xyz`)
       priority: 10
       services:
         - name: argocd-server
           namespace: argocd
           port: 80
     - kind: Rule
-      match: Host(`argocd.dev.xephrox.xyz`) && Header(`Content-Type`, `application/grpc`)
+      match: Host(`argocd.in.xephrox.xyz`) && Header(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server

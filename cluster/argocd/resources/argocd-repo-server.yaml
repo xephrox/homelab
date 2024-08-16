@@ -10,6 +10,12 @@ spec:
       volumes:
         - name: custom-tools
           emptyDir: {}
+        - name: sops-age
+          secret:
+            secretName: sops-age
+            items:
+              - key: secret.key
+                path: keys.txt
       # 2. Use an init container to download/copy custom binaries into the emptyDir
       initContainers:
         - name: install-ksops
@@ -26,7 +32,13 @@ spec:
       # 3. Volume mount the custom binary to the bin directory (overriding the existing version)
       containers:
         - name: argocd-repo-server
+          env:
+            - name: SOPS_AGE_KEY_FILE
+              value: /etc/sops/age/keys.txt
           volumeMounts:
+            - mountPath: /etc/sops/age
+              name: sops-age
+              readOnly: true
             - mountPath: /usr/local/bin/kustomize
               name: custom-tools
               subPath: kustomize

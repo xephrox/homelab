@@ -6,14 +6,13 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: '1'
+    argocd.argoproj.io/sync-wave: '0'
 spec:
   project: default
-  sources:
-  - repoURL: https://github.com/xephrox/homelab
+  source:
+    repoURL: https://github.com/xephrox/homelab
     path: cluster/apps/infrastructure/metallb
     targetRevision: main
-    ref: repo
   destination:
     name: in-cluster
     namespace: metallb-system
