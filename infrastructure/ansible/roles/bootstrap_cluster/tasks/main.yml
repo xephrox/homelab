@@ -260,7 +260,7 @@
 - name: Add ArgoCD Application (app of apps) to cluster
   kubernetes.core.k8s:
     state: present
-    src: "{{ cluster_applications_url }}"
+    src: "{{ cluster_application_url }}"
     namespace: argocd
   register: argocd_app_result
   until: argocd_app_result is not failed
