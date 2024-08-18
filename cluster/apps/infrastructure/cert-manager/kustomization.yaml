@@ -15,6 +15,5 @@ helmCharts:
 
 resources:
 - base/cf-api-token.sops.yaml
-- base/cluster-issuer.yaml
 - base/issuer-letsencrypt-production.yaml
 - base/issuer-letsencrypt-staging.yaml
