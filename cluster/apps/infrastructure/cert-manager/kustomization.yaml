@@ -4,7 +4,9 @@ kind: Kustomization
 namespace: cert-manager
 
 generators:
-- base/secret-generator.yaml
+- generator: ksops
+  files:
+  - base/cf-api-token.sops.yaml
 
 helmCharts:
 - name: cert-manager
@@ -14,6 +16,5 @@ helmCharts:
   valuesFile: values.yaml
 
 resources:
-- base/cf-api-token.sops.yaml
 - base/issuer-letsencrypt-production.yaml
 - base/issuer-letsencrypt-staging.yaml
