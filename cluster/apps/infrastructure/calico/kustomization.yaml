@@ -6,7 +6,7 @@ resources:
   - https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
   - https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
   
-- patches:
+patches:
   - path: patches/calico-enable-portforward.yaml
     target:
       kind: CalicoCustomResource
