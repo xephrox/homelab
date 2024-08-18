@@ -33,6 +33,8 @@ spec:
       containers:
         - name: argocd-repo-server
           env:
+            - name: KUSTOMIZE_PLUGIN_HOME
+              value: /home/argocd/.config/kustomize/plugin
             - name: SOPS_AGE_KEY_FILE
               value: /etc/sops/age/keys.txt
           volumeMounts:
@@ -43,5 +45,8 @@ spec:
               name: custom-tools
               subPath: kustomize
             - mountPath: /usr/local/bin/ksops
+              name: custom-tools
+              subPath: ksops
+            - mountPath: /home/argocd/.config/kustomize/plugin/viaduct.io/v1/ksops
               name: custom-tools
               subPath: ksops
