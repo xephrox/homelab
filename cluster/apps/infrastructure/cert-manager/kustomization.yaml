@@ -14,7 +14,7 @@ helmCharts:
   valuesFile: values.yaml
 
 resources:
-- base/cert-manager-cloudflare-api-token.sops.yaml
-- base/cert-manager-cluster-issuer.yaml
-- base/cert-manager-issuer-letsencrypt-production.yaml
-- base/cert-manager-issuer-letsencrypt-staging.yaml
+- base/cf-api-token.sops.yaml
+- base/cluster-issuer.yaml
+- base/issuer-letsencrypt-production.yaml
+- base/issuer-letsencrypt-staging.yaml
