@@ -24,7 +24,7 @@ spec:
           args:
             - echo "Installing KSOPS...";
               mkdir -p /custom-tools/home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/;
-              mv ksops /custom-tools/home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops;
+              mv ksops /custom-tools/home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so;
               mv kustomize /custom-tools/;
               echo "Done.";
           volumeMounts:
@@ -45,6 +45,6 @@ spec:
             - mountPath: /usr/local/bin/kustomize
               name: custom-tools
               subPath: kustomize
-            - mountPath: /home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+            - mountPath: /home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so
               name: custom-tools
-              subPath: home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+              subPath: home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops.so
