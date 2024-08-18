@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cni-config
+  namespace: calico-system
+data:
+  container_settings:
+    allow_port_forwarding: true
