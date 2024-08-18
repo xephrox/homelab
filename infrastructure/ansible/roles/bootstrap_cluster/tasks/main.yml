@@ -24,6 +24,15 @@
 
 - name: Bootstrap cluster with sops-age secret
   block:
+    - name: Create argocd namespace
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: argocd
+
     - name: Check if age key file exists
       ansible.builtin.stat:
         path: "{{ age_key_file }}"
@@ -89,7 +98,7 @@
 #     888  888    888  888 Y8b.     888    888 888 "88b 
 #     888  888    "Y888888  "Y8888  888    888 888  888 
 
-# This will ensure that the Traefik CRDs are installed before we install ArgoCD. So it's a lazy bootstrap.
+# This will ensure that the Traefik CRDs are installed before we install ArgoCD
 
 - name: Bootstrap cluster with Traefik
   block:
@@ -120,15 +129,6 @@
 
 - name: Bootstrap cluster with argocd
   block:
-    - name: Create argocd namespace
-      kubernetes.core.k8s:
-        state: present
-        definition:
-          apiVersion: v1
-          kind: Namespace
-          metadata:
-            name: argocd
-    
     - name: Install ArgoCD
       kubernetes.core.k8s:
         state: present
