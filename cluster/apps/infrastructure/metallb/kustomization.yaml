@@ -12,4 +12,3 @@ helmCharts:
 
 resources:
 - base/pool.yaml
-- base/l2advertisement.yaml

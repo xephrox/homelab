@@ -152,7 +152,7 @@ controller:
 # speaker contains configuration specific to the MetalLB speaker
 # daemonset.
 speaker:
-  enabled: true
+  enabled: false
   # command: /speaker
   # -- Speaker log level. Must be one of: `all`, `debug`, `info`, `warn`, `error` or `none`
   logLevel: info
