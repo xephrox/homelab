@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: argocd-server
-          command: ["argocd-server", "--insecure", "--staticassets", "/shared/app"]
+          command: ["/usr/local/bin/argocd-server", "--insecure", "--staticassets", "/shared/app"]
           env:
             - name: ARGOCD_SYNC_WAVE_DELAY
               value: "30"
