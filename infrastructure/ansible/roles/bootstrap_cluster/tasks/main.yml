@@ -89,15 +89,36 @@
       retries: 3
       delay: 10
 
-    - name: Deploy Calico IPv4 Pool
+    - name: Apply Calico CRDs
       kubernetes.core.k8s:
         state: present
-        apply: yes
-        template: calico-ipv4-pool.yaml.j2
-      register: calico_ipv4pool_result
-      until: calico_ipv4pool_result is not failed
+        src: "https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/crds.yaml"
+      register: calico_crds_result
+      until: calico_crds_result is not failed
       retries: 3
       delay: 10
+
+    - name: Deploy Calico IPv4 Pool
+      block:
+        - name: Wait for IPPool CRD to be available
+          kubernetes.core.k8s_info:
+            api_version: apiextensions.k8s.io/v1
+            kind: CustomResourceDefinition
+            name: ippools.crd.projectcalico.org
+          register: ippool_crd
+          until: ippool_crd.resources | length > 0
+          retries: 10
+          delay: 10
+
+        - name: Apply Calico IPv4 Pool
+          kubernetes.core.k8s:
+            state: present
+            apply: yes
+            definition: "{{ lookup('template', 'calico-ipv4-pool.yaml.j2') | from_yaml }}"
+          register: calico_ipv4pool_result
+          until: calico_ipv4pool_result is not failed
+          retries: 3
+          delay: 10
 
 # 88888888888                        .d888 d8b 888      
 #     888                           d88P"  Y8P 888      
@@ -143,7 +164,7 @@
       kubernetes.core.k8s:
         state: present
         apply: yes
-        src: "https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/ha/install.yaml"
+        src: "https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_cd_version }}/manifests/install.yaml"
         namespace: argocd
       register: argocd_install_result
       until: argocd_install_result is not failed
