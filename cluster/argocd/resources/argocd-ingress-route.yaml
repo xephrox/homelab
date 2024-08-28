@@ -3,12 +3,7 @@ kind: IngressRoute
 metadata:
   name: argocd-server
   annotations:
-    cert-manager.io/common-name: argocd.dev.xephrox.xyz
-    cert-manager.io/private-key-algorithm: ECDSA
-    cert-manager.io/private-key-size: '384'
-    cert-manager.io/subject-countries: SE
-    cert-manager.io/subject-organizationalunits: Kubernetes - Services
-    cert-manager.io/subject-organizations: XEPHROX.XYZ
+    purelb.io/service-group: internal-ipv4
 spec:
   entryPoints:
     - websecure

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: purelb
+
+helmCharts:
+- name: purelb
+  repo: https://gitlab.com/api/v4/projects/20400619/packages/helm/stable
+  releaseName: purelb
+  valuesFile: values.yaml
+
+resources:
+- base/local-sg.yaml

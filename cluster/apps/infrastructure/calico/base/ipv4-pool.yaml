@@ -1,0 +1,7 @@
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: internal-ipv4
+spec:
+  cidr: 10.123.10.0/24
+  disabled: true

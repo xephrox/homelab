@@ -89,6 +89,16 @@
       retries: 3
       delay: 10
 
+    - name: Deploy Calico IPv4 Pool
+      kubernetes.core.k8s:
+        state: present
+        apply: yes
+        template: calico-ipv4-pool.yaml.j2
+      register: calico_ipv4pool_result
+      until: calico_ipv4pool_result is not failed
+      retries: 3
+      delay: 10
+
 # 88888888888                        .d888 d8b 888      
 #     888                           d88P"  Y8P 888      
 #     888                           888        888      

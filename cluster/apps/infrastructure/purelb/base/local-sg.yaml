@@ -1,0 +1,11 @@
+apiVersion: purelb.io/v1
+kind: ServiceGroup
+metadata:
+  name: internal-ipv4
+  namespace: purelb
+spec:
+  local:
+    v4pools:
+    - aggregation: /32
+      pool: 10.123.10.45-10.123.10.46
+      subnet: 10.123.10.0/24

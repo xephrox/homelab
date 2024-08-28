@@ -4,12 +4,7 @@ metadata:
   name: traefik-dashboard
   namespace: traefik
   annotations:
-    cert-manager.io/common-name: traefik.dev.xephrox.xyz
-    cert-manager.io/private-key-algorithm: ECDSA
-    cert-manager.io/private-key-size: '384'
-    cert-manager.io/subject-countries: SE
-    cert-manager.io/subject-organizationalunits: Kubernetes - Services
-    cert-manager.io/subject-organizations: XEPHROX.XYZ
+    purelb.io/service-group: internal-ipv4
 spec:
   entryPoints:
     - websecure

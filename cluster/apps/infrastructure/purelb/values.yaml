@@ -1,0 +1,6 @@
+Prometheus:
+  allocator:
+    Metrics:
+      enabled: true
+    serviceMonitor:
+      enabled: false

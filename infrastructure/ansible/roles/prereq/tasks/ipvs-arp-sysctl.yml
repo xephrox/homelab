@@ -1,0 +1,11 @@
+---
+#https://purelb.gitlab.io/purelb/install/install/
+- name: Enable IPVS ARP sysctl
+  ansible.builtin.copy:
+    content: |
+      net.ipv4.conf.all.arp_ignore=1
+      net.ipv4.conf.all.arp_announce=2
+    dest: /etc/sysctl.d/99-k8s_arp.conf
+    owner: root
+    group: root
+    mode: "0644"
