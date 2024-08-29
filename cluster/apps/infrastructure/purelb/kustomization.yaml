@@ -9,5 +9,5 @@ helmCharts:
   releaseName: purelb
   valuesFile: values.yaml
 
-resources:
+# resources:
 # - base/local-sg.yaml
