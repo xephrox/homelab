@@ -1,8 +1,13 @@
 ---
+ingressClass:
+  name: traefik
+  enabled: true
 providers:
   kubernetesCRD:
+    ingressClass: traefik
     allowCrossNamespace: true
   kubernetesIngress:
+    ingressClass: traefik
     publishedService:
       # To fix argocd stuck in progressing https://github.com/argoproj/argo-cd/issues/968#issuecomment-955976397
       enabled: true
