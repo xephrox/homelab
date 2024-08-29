@@ -3,8 +3,6 @@ kind: IngressRoute
 metadata:
   name: traefik-dashboard
   namespace: traefik
-  annotations:
-    purelb.io/service-group: internal-ipv4
 spec:
   entryPoints:
     - websecure

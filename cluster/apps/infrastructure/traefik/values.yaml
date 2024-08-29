@@ -25,6 +25,4 @@ persistence:
 service:
   type: LoadBalancer
   annotations:
-    metallb.universe.tf/address-pool: ingress-pool
-    external-dns.alpha.kubernetes.io/hostname: traefik.xephrox.xyz
-  # externalTrafficPolicy: Local
+    purelb.io/service-group: internal-ipv4
