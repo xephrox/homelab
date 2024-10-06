@@ -29,5 +29,35 @@ variable "instances" {
     vm_vlan                = number
     vm_vmid                = optional(number, 0)
   }))
+  default = {}
+}
 
+variable "containers" {
+  description = "Map of LXC container configurations."
+  type = map(object({
+    proxmox_host              = string
+    description               = string
+    id                        = optional(number, 0)
+    template_name             = string
+    template_storage_location = string
+    cpu_cores                 = number
+    memory                    = number
+    swap                      = number
+    unprivileged              = optional(bool, true)
+    onboot                    = optional(bool, true)
+    storage_location          = string
+    disk_size                 = string
+    ipaddress                 = string
+    vlan                      = number
+    password                  = optional(string, "")
+    ssh_public_keys           = string
+    tags                      = string
+    mountpoints = optional(map(object({
+      slot    = number
+      storage = string
+      mp      = string
+      size    = string
+    })), {})
+  }))
+  default = {}
 }
